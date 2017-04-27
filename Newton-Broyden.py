@@ -1,34 +1,36 @@
 from math import *
 
 def f1(V,i):
+    x,y,z = V[0][0], V[1][0], V[2][0]
     if (i==1):
-        resultado = 16.0*(V[0]**4) + 16.0*(V[1]**4) + 1.0*V[2]**4 - 16.0
+        resultado = 16.0*(x**4) + 16.0*(y**4) + 1.0*(z**4) - 16.0
         return resultado
     
     if (i==2):
-        resultado = (1.0*V[0]**2) + (1.0*V[1]**2) + 1.0*V[2]**2 - 3.0
+        resultado = 1.0*(x**2) + 1.0*(y**2) + 1.0*(z**2) - 3.0
         return resultado
     
     if (i==3):
-        resultado = (1.0*V[0]**3) - (1.0*V[1]) + 1.0*V[2] - 1.0
+        resultado = 1.0*(x**3) - (1.0*y) + 1.0*z - 1.0
         return resultado
 
 
 def df1(V,i):
+    x,y,z = V[0][0], V[1][0], V[2][0]
     if (i==1):
-        res1 = 64.0*(V[0]**3)
-        res2 = 64.0*(V[1]**3)
-        res3 = 4.0*V[2]**3
+        res1 = 64.0*(x**3)
+        res2 = 64.0*(y**3)
+        res3 = 4.0*(z**3)
         return [res1, res2, res3]
 
     if (i==2):
-        res1 = 2.0*(V[0])
-        res2 = 2.0*(V[1])
-        res3 = 2.0*V[2]
+        res1 = 2.0*(x)
+        res2 = 2.0*(y)
+        res3 = 2.0*z
         return [res1, res2, res3]
 
     if (i==3):
-        res1 = 3.0*(V[0]**2)
+        res1 = 3.0*(x**2)
         res2 = -1.0
         res3 = 1.0
         return [res1, res2, res3]
@@ -36,7 +38,7 @@ def df1(V,i):
 
 def f2(V,i):
 	#initialize variables
-	c2, c3, c4 = V[0], V[1], V[2]
+	c2, c3, c4 = V[0][0], V[1][0], V[2][0]
 	teta1, teta2 = 0, 0
 
 	if (i==1):
@@ -50,10 +52,38 @@ def f2(V,i):
 		+ 252*(c4**2)*(c2**2) + 1296*(c4**3)*c2 + 3348*(c4**4) + 24*(c2**3) + 3*c2 - teta2
 		return ret
 
+
+def df2(V,i):
+    c2, c3, c4 = V[0][0], V[1][0], V[2][0]
+    teta1, teta2 = 0, 0
+
+    #derivadas em relaÁ„o a c2
+    if (i==1):
+        res1 = 2*c2
+        res2 = 12*c3*c2 + 36*c4*c2*c4
+        res3 = 120*(c3**2)*c2 + 576*(c3**2)*c4 + 504*(c4**2)*c2 + 1296*(c4**3)
+        + 72*(c2**2)*c4 + 3
+        return [res1, res2, res3]
+    
+    #derivadas em relaÁ„o a c3
+    if (i==2):
+        res1 = 4*c3
+        res2 = 24*(c3**2) + 6*(c2**2) + 108*(c4**2)
+        res3 = 240*(c3**3) + 120*c3*(c2**2) + 1152*c3*c2*c4 + 4464*c3*(c4**2)
+        return [res1, res2, res3]
+    
+    #derivadas em relaÁ„o a c4
+    if (i==3):
+        res1 = 12*c4
+        res2 = 36*c3*c2 + 216*c3*c4
+        res3 = 576*(c3**2)*c2 + 4464*(c3**2)*c4 + 504*c4*(c2**2)
+        + 3888*(c4**2)*c2 + 13392*(c4**3) + 24*(c2**3)
+        return [res1, res2, res3]
+
 def euclidean(X):
     total = 0;
     for x in X:
-        total += 1.0*x**2
+        total += 1.0*x[0]**2
     return sqrt(total)
 
 
@@ -112,9 +142,16 @@ def transposeMatrix(m):
         t.append(tRow)
     return t
 
+def transposeVector(V):
+    t = []
+    for i in range(len(V)):
+        t += [V[i][0]]
+    t = [t]
+    return t
+
 def getMatrixMinor(m,i,j):
     ret = [row[:j] + row[j+1:] for row in (m[:i]+m[i+1:])]
-return ret
+    return ret
 
 def getMatrixDeternminant(m):
     #base case for 2x2 matrix
@@ -126,19 +163,19 @@ def getMatrixDeternminant(m):
         determinant += ((-1)**c)*m[0][c]*getMatrixDeternminant(getMatrixMinor(m,0,c))
     return determinant
 
-def getMatrixInverse(m):
-    determinant = getMatrixDeternminant(m)
+def getMatrixInverse(M):
+    determinant = getMatrixDeternminant(M)
     #special case for 2x2 matrix:
-    if len(m) == 2:
-        return [[m[1][1]/determinant, -1*m[0][1]/determinant],
-                [-1*m[1][0]/determinant, m[0][0]/determinant]]
+    if len(M) == 2:
+        return [[M[1][1]/determinant, -1*M[0][1]/determinant],
+                [-1*M[1][0]/determinant, M[0][0]/determinant]]
 
     #find matrix of cofactors
     cofactors = []
-    for r in range(len(m)):
+    for r in range(len(M)):
         cofactorRow = []
-        for c in range(len(m)):
-            minor = getMatrixMinor(m,r,c)
+        for c in range(len(M)):
+            minor = getMatrixMinor(M,r,c)
             cofactorRow.append(((-1)**(r+c)) * getMatrixDeternminant(minor))
         cofactors.append(cofactorRow)
     cofactors = transposeMatrix(cofactors)
@@ -155,34 +192,41 @@ def mult(A,B):
 
 	#verificar dimens√µes das matrizes
 	if (widthA != heightB):
-		print "Dimens√µes das matrizes n√£o s√£o incompat√≠veis"
+		print "Dimens√µes das matrizes s„o incompatÌveis"
 		return 0
 
 	#inicializar matriz Resultado
-	R = [[0.0 for x in range(heightA)] for y in range(widthB)] 
+	R = [[0.0 for x in range(widthB)] for y in range(heightA)] 
 
 	for i in range(heightA):
 		for j in range(widthB):
-			for k in range(heightB):
+			for k in range(widthA):
 				R[i][j] += A[i][k] * B[k][j]
 	return R
 
+def multVector(A,V):
+    R = [0.0 for i in range(len(A))]
+    for i in range(len(A)):
+        for j in range(len(A)):
+            R[i] += A[i][j]*V[j]
+    return R
+
+
 def add(A,B):
-	#height: qtd de linhas
-	#width: qtd de colunas
-	heightA, widthA = len(A), len(A[0])
-	heightB, widthB = len(B), len(B[0])
+    R = []
+    for i in range(len(A)):
+        row = []
+        for j in range(len(A[i])):
+            row.append(A[i][j] + B[i][j])
+        R.append(row)
+    return R
 
-	#verificar dimens√µes das matrizes
-	if ((widthA != widthB) or (heightA != heightB)):
-		print "Dimens√µes das matrizes n√£o s√£o incompat√≠veis"
-		return 0
 
-	R = [[0.0 for x in range(heightA)] for y in range(widthA)]
-	for i in range(heightA):
-		for j in range(widthA):
-			R [i][j] = A[i][j] + B[i][j]
-	return ret
+def addVector(X,Y):
+    R = [0.0 for i in range(len(X))]
+    for i in range(len(X)):
+        R[i] = X[i] + Y[i]
+    
 
 def scalar(a,A):
 	ret = [[(a)* x for x in A[i]] for i in range(len(A))]
@@ -194,33 +238,27 @@ def NewtonMethod(n, niter):
     tolk = 0
 
 
-    X0 = [1 for i in range(n)]
+    X0 = [[1.0] for i in range(n)]
 
     for k in range (niter):
         J, F, deltaX = [], [], []
         
         for i in range(n):
-            F += [f(X0,i+1)]
-            J += [df(X0,i+1)]
+            F += [[f1(X0,i+1)]]
+            J += [df1(X0,i+1)]
 
         Ji = getMatrixInverse(J)
 
-        for i in range(n):
-            temp = 0
-            for j in range(n):
-                temp += Ji[i][j]*F[j]
-            deltaX += [round(temp,5)]
+        deltaX = mult(Ji,F)
 
 
-        for i in range(n):
-            X0[i] = X0[i]-deltaX[i]
+        X0 = add(X0,scalar(-1,deltaX))
 
         tolk = 1.0*euclidean(deltaX)/euclidean(X0)
+        print ""
         print X0
-        print "============================"
         if (tolk < tol):
             print "Convergence REACHED"
-            print X0
             return
 
     print "Convergence not reached"
@@ -232,56 +270,64 @@ def BroydenMethod(n, niter):
 
     #Inicializar matriz Jacobianos e vetor de entrada
     B = [[1.0]*n for i in range(n)]
-    X0 = [1.0 for i in range(n)]
+    for i in range(n):
+        for j in range(n):
+            if (i==j):
+                B[i][j] = 1.0
+            else:
+                B[i][j] = 1.7
+    
+    X0 = [[1.0] for i in range(n)]
 
     for k in range (niter):
-        F, deltaX = [], []
+        Y, F, deltaX = [], [], []
         J = B
         
         for i in range(n):
-            F += [f2(X0,i+1)]
+            F += [[f1(X0,i+1)]]
 
         #inverter a matriz para resolver o sistema
         Ji = getMatrixInverse(J)
 
         #multiplicar matriz inversa Ji pelo vetor V0
-        for i in range(n):
-            temp = 0.0
-            for j in range(n):
-                temp += Ji[i][j]*F[j]
-            deltaX += [round(temp,5)]
+        deltaX = scalar(-1,mult(Ji,F))
 
         #salvar valor antigo de F
         F0 = F    
 
         #atualizar X0
-        for i in range(n):
-            X0[i] = X0[i]-deltaX[i]
+        X0 = add(X0,deltaX)
 
-        #calcular F com V0 atualizado
+
+        #calcular F com X0 atualizado
         F = []
         for i in range(n):
-        	F+= [f2(X0,i+1)]
+            F+= [[f1(X0,i+1)]]
 
         #calcular Y
-        for i in range(n):
-        	Y += [F[i]-F0[i]]
+        Y = add(F,scalar(-1,F0))
+
 
         #calcular o erro e comparar com toler√¢ncia
         tolk = 1.0*euclidean(deltaX)/euclidean(X0)
         print X0
-        print "============================"
+        print ""
+        
         if (tolk < tol):
             print "Convergence REACHED"
-            print X0
             return
+        
         else:
-            aux = mult(B,transposeMatrix(deltaX))
-            aux = add(Y,scalar((-1),B))
-            aux2 = mult(deltaX, transposeMatrix(deltaX))
-            B = add(B,(aux/aux2)
+            aux = mult(B,deltaX)
+            aux = add(Y,scalar(-1.0,aux))
+            aux = mult(aux,transposeVector(deltaX))
+            aux2 = mult(transposeVector(deltaX), deltaX)
+
+            B = add(B,scalar((1.0/aux2[0][0]),aux))
+
                     
-    print "Convergence not reached"
+    print "Convergence NOT REACHED"
 
 #main()
-BroydenMethod(3,50)
+NewtonMethod(3,50)
+#BroydenMethod(3,200)

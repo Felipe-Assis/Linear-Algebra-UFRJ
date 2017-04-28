@@ -78,6 +78,8 @@ def df2(V,i):
         res3 = 576*(c3**2)*c2 + 4464*(c3**2)*c4 + 504*c4*(c2**2) + 3888*(c4**2)*c2 + 13392*(c4**3) + 24*(c2**3)
         return [res1, res2, res3]
 
+
+#Função a ser ajustada
 def f3(V,i):
     b0,b1,b2 = V[0][0], V[1][0], V[2][0]
     x = [1.0,2.0,3.0]
@@ -143,27 +145,27 @@ def cholesky(M):
         print L
 
                   
-def transposeMatrix(m):
-    t = []
-    for r in range(len(m)):
+def transposeMatrix(M):
+    T = []
+    for i in range(len(M)):
         tRow = []
-        for c in range(len(m[r])):
-            if c == r:
-                tRow.append(m[r][c])
+        for j in range(len(M[i])):
+            if i == j:
+                tRow.append(M[i][j])
             else:
-                tRow.append(m[c][r])
-        t.append(tRow)
-    return t
+                tRow.append(M[j][i])
+        T.append(tRow)
+    return T
 
 def transposeVector(V):
-    t = []
+    T = []
     for i in range(len(V)):
-        t += [V[i][0]]
-    t = [t]
-    return t
+        T += [V[i][0]]
+    T = [T]
+    return T
 
-def getMatrixMinor(m,i,j):
-    ret = [row[:j] + row[j+1:] for row in (m[:i]+m[i+1:])]
+def getMatrixMinor(M,i,j):
+    ret = [row[:j] + row[j+1:] for row in (M[:i]+M[i+1:])]
     return ret
 
 def getDeternminant(M):
@@ -176,7 +178,7 @@ def getDeternminant(M):
         determinant += ((-1)**i)*M[0][i]*getDeternminant(getMatrixMinor(M,0,i))
     return determinant
 
-def Inverse(M):
+def getInverse(M):
     determinant = getDeternminant(M)
     #special case for 2x2 matrix:
     if len(M) == 2:
@@ -192,6 +194,7 @@ def Inverse(M):
             cofactorRow.append(((-1)**(i+j)) * getDeternminant(minor))
         cofactors.append(cofactorRow)
     cofactors = transposeMatrix(cofactors)
+    
     for i in range(len(cofactors)):
         for j in range(len(cofactors)):
             cofactors[i][j] = cofactors[i][j]/determinant
@@ -261,7 +264,7 @@ def NewtonMethod(n, niter):
             F += [[f1(X0,i+1)]]
             J += [df1(X0,i+1)]
 
-        Ji = Inverse(J)
+        Ji = getInverse(J)
 
         deltaX = mult(Ji,F)
 
@@ -311,7 +314,7 @@ def BroydenMethod(n, niter):
             F += [[f1(X0,i+1)]]
 
         #inverter a matriz para resolver o sistema
-        Ji = Inverse(J)
+        Ji = getInverse(J)
 
         #multiplicar matriz inversa Ji pelo vetor V0
         deltaX = scalar(-1,mult(Ji,F))
@@ -377,7 +380,7 @@ def NL_MinimumSquare(n, niter):
         #print F
         a = mult(transposeMatrix(J),J)
         #print transposeMatrix(J)
-        a = Inverse(a)
+        a = getInverse(a)
         b = mult(transposeMatrix(J),F)
 
         #print aux
@@ -396,6 +399,6 @@ def NL_MinimumSquare(n, niter):
 
 
 #main()
-#NewtonMethod(3,500)
-BroydenMethod(3,500)
+NewtonMethod(3,500)
+#BroydenMethod(3,500)
 #NL_MinimumSquare(3,500)

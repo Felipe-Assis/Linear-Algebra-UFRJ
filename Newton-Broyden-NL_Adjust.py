@@ -296,7 +296,7 @@ def BroydenMethod(n, niter):
             if (i==j):
                 B[i][j] = 1.0
             else:
-                B[i][j] = 1.7
+                B[i][j] = 3.0
     X0 = [[1.0] for i in range(n)]
 
     for k in range (niter):
@@ -384,4 +384,4 @@ def NL_MinimumSquare(n, niter):
 #main()
 #NewtonMethod(3,500)
 #BroydenMethod(3,500)
-NL_MinimumSquare(3,500)
+#NL_MinimumSquare(3,500)

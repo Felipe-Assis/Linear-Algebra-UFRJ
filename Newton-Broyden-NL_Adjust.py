@@ -357,17 +357,15 @@ def NL_MinimumSquare(n, niter):
             F += [[f3(B0,i)]]
             J += [df3(B0,i)]
 
-        #deltaB = mult(Ji,F)
+        #calcular deltaB: -inv(J'*J)*J'*F
         #print J
         #print F
         a = mult(transposeMatrix(J),J)
-        #print transposeMatrix(J)
         a = getInverse(a)
         b = mult(transposeMatrix(J),F)
-
-        #print aux
         deltaB = scalar(-1,mult(a,b))
-        
+
+        #Calcular B0 como no método de Newton
         B0 = add(B0,deltaB)
     
         tolk = 1.0*euclidean(deltaB)/euclidean(B0)
@@ -382,5 +380,5 @@ def NL_MinimumSquare(n, niter):
 
 #main()
 #NewtonMethod(3,500)
-BroydenMethod(3,500)
-#NL_MinimumSquare(3,500)
+#BroydenMethod(3,500)
+NL_MinimumSquare(3,500)

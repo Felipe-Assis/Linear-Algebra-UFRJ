@@ -56,21 +56,21 @@ def df2(V,i):
     c2, c3, c4 = V[0][0], V[1][0], V[2][0]
     teta1, teta2 = 0, 11667.0
 
-    #derivadas em relaÁ„o a c2
+    #derivadas em rela√ß√£o a c2
     if (i==1):
         res1 = 2*c2
         res2 = 4*c3
         res3 = 12*c4
         return [res1, res2, res3]
     
-    #derivadas em relaÁ„o a c3
+    #derivadas em rela√ß√£o a c3
     if (i==2):
         res1 = 12*c3*c2 + 36*c3*c4
         res2 = 24*(c3**2) + 6*(c2**2) + 108*(c4**2)
         res3 = 36*c3*c2 + 216*c3*c4
         return [res1, res2, res3]
     
-    #derivadas em relaÁ„o a c4
+    #derivadas em rela√ß√£o a c4
     if (i==3):
         res1 = 20*(c3**2)*c2 + 576*(c3**2)*c4 + 504*(c4**2)*c2 + 1296*(c4**3)
         + 72*(c2**2)*c4 + 3
@@ -79,7 +79,7 @@ def df2(V,i):
         return [res1, res2, res3]
 
 
-#FunÁ„o a ser ajustada
+#Fun√ß√£o a ser ajustada
 def f3(V,i):
     b0,b1,b2 = V[0][0], V[1][0], V[2][0]
     x = [1.0,2.0,3.0]
@@ -208,7 +208,7 @@ def mult(A,B):
 
 	#verificar dimenses das matrizes
 	if (widthA != heightB):
-		print "Dimensıes das matrizes s„o incompatÌveis"
+		print "Dimens√µes das matrizes s√£o incompat√≠veis"
 		return 0
 
 	#inicializar matriz Resultado
@@ -323,7 +323,7 @@ def BroydenMethod(n, niter):
         #calcular Y
         Y = add(F,scalar(-1,F0))
 
-        #calcular o erro e comparar com toler√¢ncia
+        #calcular o erro e comparar com toler√É¬¢ncia
         tolk = 1.0*euclidean(deltaX)/euclidean(X0)
         print X0
         print ""
@@ -365,7 +365,7 @@ def NL_MinimumSquare(n, niter):
         b = mult(transposeMatrix(J),F)
         deltaB = scalar(-1,mult(a,b))
 
-        #Calcular B0 como no mÈtodo de Newton
+        #Calcular B0 como no m√©todo de Newton
         B0 = add(B0,deltaB)
     
         tolk = 1.0*euclidean(deltaB)/euclidean(B0)

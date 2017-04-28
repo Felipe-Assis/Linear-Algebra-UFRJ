@@ -254,7 +254,6 @@ def NewtonMethod(n, niter):
     tol = 10.0**(-5)
     tolk = 0
 
-
     X0 = [[1.0] for i in range(n)]
 
     for k in range (niter):
@@ -296,15 +295,6 @@ def BroydenMethod(n, niter):
             else:
                 B[i][j] = 1.7
     X0 = [[1.0] for i in range(n)]
-    
-    #for i in range(n):
-    #    Xt = X0[:]
-    #    Xt[i] = [1+dx]
-    #    for j in range(n):
-    #        B[i][j] = f1(Xt,j+1)
-    #        print Xt
-    #        print B[i][j]
-    #print B
 
     for k in range (niter):
         Y, F, deltaX = [], [], []
@@ -325,7 +315,6 @@ def BroydenMethod(n, niter):
         #atualizar X0
         X0 = add(X0,deltaX)
 
-
         #calcular F com X0 atualizado
         F = []
         for i in range(n):
@@ -334,7 +323,6 @@ def BroydenMethod(n, niter):
         #calcular Y
         Y = add(F,scalar(-1,F0))
 
-
         #calcular o erro e comparar com tolerância
         tolk = 1.0*euclidean(deltaX)/euclidean(X0)
         print X0
@@ -342,7 +330,6 @@ def BroydenMethod(n, niter):
         
         if (tolk < tol):
             print "Convergence REACHED"
-            #print X0
             return
         
         else:
@@ -350,10 +337,8 @@ def BroydenMethod(n, niter):
             aux = add(Y,scalar(-1.0,aux))
             aux = mult(aux,transposeVector(deltaX))
             aux2 = mult(transposeVector(deltaX), deltaX)
-
             B = add(B,scalar((1.0/aux2[0][0]),aux))
-
-                    
+        
     print "Convergence NOT REACHED"
 
 
@@ -362,10 +347,8 @@ def NL_MinimumSquare(n, niter):
     B0 = []
     tol = 10.0**(-5)
     tolk = 0
-
-
     B0 = [[1.0] for i in range(n)]
-
+    
     for k in range (niter):
         J, F, deltaB = [], [], []
 
@@ -373,7 +356,6 @@ def NL_MinimumSquare(n, niter):
         for i in range(n):
             F += [[f3(B0,i)]]
             J += [df3(B0,i)]
-
 
         #deltaB = mult(Ji,F)
         #print J
@@ -399,6 +381,6 @@ def NL_MinimumSquare(n, niter):
 
 
 #main()
-NewtonMethod(3,500)
-#BroydenMethod(3,500)
+#NewtonMethod(3,500)
+BroydenMethod(3,500)
 #NL_MinimumSquare(3,500)

@@ -85,6 +85,7 @@ def f3(V,i):
     x = [1.0,2.0,3.0]
     y = [1.0,2.0,9.0]
     ret = b0 + b1*(x[i]**b2) - y[i]
+    print ret
     return ret
 
 def df3(V,i):
@@ -261,10 +262,10 @@ def NewtonMethod(n, niter):
 
     for k in range (niter):
         J, F, deltaX = [], [], []
-        
+            
         for i in range(n):
-            F += [[f1(X0,i+1)]]
-            J += [df1(X0,i+1)]
+            F += [[f2(X0,i+1)]]
+            J += [df2(X0,i+1)]
 
         Ji = getInverse(J)
 
@@ -285,26 +286,27 @@ def NewtonMethod(n, niter):
 
 def BroydenMethod(n, niter):
     X0 = []
-    tol = 10.0**(-4)
-    tolk = 0
+    x0 = 1.0
+    tol = 10.0**(-5)
+    tolk = 0.0
     dx = 10.0**(-4)
 
     #Inicializar matriz Jacobianos e vetor de entrada
     B = [[0.0]*n for i in range(n)]
+    X0 = [[x0] for i in range(n)]
     for i in range(n):
         for j in range(n):
-            if (i==j):
-                B[i][j] = 1.0
-            else:
-                B[i][j] = 3.0
-    X0 = [[1.0] for i in range(n)]
+            Xt = X0[:]
+            Xt[j] = [x0+dx]
+            B[i][j] = (f2(Xt,i+1)-f2(X0,i+1))/dx
+    #print B
 
     for k in range (niter):
         Y, F, deltaX = [], [], []
-        J = B
+        J = B[:]
         
         for i in range(n):
-            F += [[f1(X0,i+1)]]
+            F += [[f2(X0,i+1)]]
 
         #inverter a matriz para resolver o sistema
         Ji = getInverse(J)
@@ -321,17 +323,18 @@ def BroydenMethod(n, niter):
         #calcular F com X0 atualizado
         F = []
         for i in range(n):
-            F+= [[f1(X0,i+1)]]
+            F+= [[f2(X0,i+1)]]
 
         #calcular Y
         Y = add(F,scalar(-1,F0))
 
         #calcular o erro e comparar com tolerância
         tolk = 1.0*euclidean(deltaX)/euclidean(X0)
-        print X0
-        print ""
+        #print X0
+        #print ""
         
         if (tolk < tol):
+            print X0
             print "Convergence REACHED"
             return
         
@@ -350,7 +353,8 @@ def NL_MinimumSquare(n, niter):
     B0 = []
     tol = 10.0**(-4)
     tolk = 0
-    B0 = [[10.0] for i in range(n)]
+    B0 = [[1.0] for i in range(n)]
+    #B0 = [[1.0],[2.0],[3.0]]
     
     for k in range (niter):
         J, F, deltaB = [], [], []
@@ -382,6 +386,6 @@ def NL_MinimumSquare(n, niter):
 
 
 #main()
-#NewtonMethod(3,500)
-#BroydenMethod(3,500)
+#NewtonMethod(3,100)
+BroydenMethod(3,100)
 #NL_MinimumSquare(3,500)

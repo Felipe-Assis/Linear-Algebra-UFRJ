@@ -102,49 +102,6 @@ def euclidean(X):
         total += 1.0*x[0]**2
     return sqrt(total)
 
-
-def det2x2(M):
-        ret = (M[0][0]*M[1][1] - M[0][1]*M[1][0])
-        return ret
-   
-
-def det3x3(M):
-    a = M[0][0]*(M[1][1]*M[2][2] - M[1][2]*M[2][1])
-    b = M[0][1]*(M[1][0]*M[2][2] - M[1][2]*M[2][0])
-    c = M[0][2]*(M[1][0]*M[2][1] - M[1][1]*M[2][0])
-    return (a-b+c)
-
-
-def inverse3x3(M):
-    a, b, c = M[0][0], M[0][1], M[0][2]
-    d, e, f = M[1][0], M[1][1], M[1][2]
-    g, h, i = M[2][0], M[2][1], M[2][2]
-    A = [[e*i-f*h, c*h-b*i, b*f-c*e],
-        [f*g-d*i, a*i-c*g, c*d-a*f],
-        [d*h-e*g, b*g-a*h, a*e-b*d]]
-
-    det = det3x3(M)
-
-    for i in range(len(M)):
-        for j in range(len(M)):
-            A[i][j] = A[i][j]*(1.0/det)
-    return A
-
-
-def cholesky(M):
-        n = len(M)
-        L = [[0.0]*n for i in xrange(n)]
-        for i in xrange(n):
-                for k in range(i+1):
-                    temp = sum(L[i][j]*L[k][j] for j in xrange(k))
-
-                if (i==k):
-                        L[i][k] = sqrt(M[i][i] - temp)
-                
-                else:
-                        L[i][k] = (1.0/L[k][k] * (M[i][k] - temp))
-        print L
-
                   
 def transposeMatrix(M):
     T = []
@@ -249,9 +206,6 @@ def scalar(a,A):
 	ret = [[(a)* x for x in A[i]] for i in range(len(A))]
 	return ret
 
-def cout(M):
-    for i in range(len(M)):
-        print M[i]
 
 def NewtonMethod(n, niter):
     X0 = []
